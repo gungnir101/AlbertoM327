@@ -1,5 +1,6 @@
 {
     "files.associations": {
         "list_library.h": "c"
-    }
+    },
+    "C_Cpp.errorSquiggles": "Disabled"
 }
