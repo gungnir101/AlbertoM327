@@ -1,0 +1,10 @@
+hostname: ncc-alberto  /proc/sys/kernel/hostname
+cpu type: Quadcore model: 158
+kernel version: Linux version 5.11.0-37-generic (buildd@lcy01-amd64-021) (gcc (Ubuntu 9.3.0-17ubuntu1~20.04) 9.3.0, GNU ld (GNU Binutils for Ubuntu) 2.34) #41~20.04.2-Ubuntu SMP Fri Sep 24 09:06:38 UTC 2021
+/proc/version
+uptime:  14:53:51 up 42 min,  1 user,  load average: 0.19, 0.32, 0.35 /proc/uptime
+cputime: us: 34925 sys: 7850 id: 222164 /proc/stat
+memTotal: 4028320kB MemFree: 274780kB /proc/meminfo
+disk_reads: 2906632 disk_writes: 963330 /proc/diskstats
+context_switches: 8264081 /proc/stat
+processes_created: 3804 /proc/stat 
