@@ -21,6 +21,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include "../common.h"
 
 /* NOTE! We assume that the PDF reader app 'evince' is
@@ -28,19 +29,9 @@
  */
 const char *pdf_reader_app="/usr/bin/evince";
 
-static int exec_pdf_reader_app(char *pdfdoc)
-{
-	char * const pdf_argv[] = {"evince", pdfdoc, 0};
-
-		if (execv(pdf_reader_app, pdf_argv) < 0) {
-			WARN("execv failed\n");
-			return -1;
-		}
-		return 0; /* never reached */
-}
-
 static void interpret_wait(pid_t child, int wstatus)
 {
+	int gVerbose = 1;
 	VPRINT("Child (%7d) status changed:\n", child);
 	if (WIFEXITED(wstatus))
 		VPRINT(" normal termination: exit status: %d\n",
@@ -60,24 +51,36 @@ static void interpret_wait(pid_t child, int wstatus)
 		VPRINT(" (was stopped), resumed (SIGCONT)\n");
 }
 
-int main(int argc, char **argv)
+static int exec_pdf_reader_app(char *pdfdoc)
 {
-    pid_t cpid;
-    int wstat = 0;
+	char * const pdf_argv[] = {"evince", pdfdoc, 0};
+
+	if(fork() == 0){
+		if (execv(pdf_reader_app, pdf_argv) < 0) {
+			WARN("execv failed\n");
+			return -1;
+		}
+		return 0; /* never reached */
+	}
+}
+
+int main(int argc, char **argv){
+
+	pid_t cpid;
+    int wstat = 2;
+
 	if (argc < 2) {
 		fprintf(stderr, "Usage: %s {pathname_of_doc.pdf}\n"
 			, argv[0]);
 		exit(EXIT_FAILURE);
 	}
-
-    if(fork() == 0){
 	
-        if (exec_pdf_reader_app(argv[1]) < 0)
+    if (exec_pdf_reader_app(argv[1]) < 0)
             FATAL("exec pdf function failed\n");
-        cpid = wait(2);
-        interpret_wait(cpid,2);
-    }
-    
+
+	cpid = wait(wstat);
+    interpret_wait(cpid,&wstat);
+
 	exit (EXIT_SUCCESS);
 }
 
